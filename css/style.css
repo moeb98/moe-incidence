@@ -1,0 +1,111 @@
+body,
+html {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #eee;
+}
+
+p { 
+    border: 1px #444; 
+    width: auto;
+    padding: 0px;
+    font-size: 18px;
+    border-radius: 0px;
+    color: #444;
+} 
+
+span.label {
+    font-weight: bold;
+    color: #000;
+} 
+
+h3 {
+    text-align: center;
+    font-weight: normal;
+    color: #ddd;
+    margin: 3%;
+}
+
+h6 {
+    text-align: center;
+    color: #ddd;
+    margin: 2%;
+    font-size: 0.5em;
+}
+
+#tbl_incidence {
+    width: 100%;
+    text-align: center;
+}
+
+#tbl_incidence td {
+    width: 50%;
+    border-bottom: thin solid #888;
+    color: #ddd;
+}
+
+#div_stoplight {
+    margin-top: 0%;
+    margin-bottom: 3%;
+    padding-top: 3%;
+    padding-bottom: 3%;
+    width: 100%;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 1.8em;
+    color: #eee;
+    display: table;
+}
+
+.bold {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: #eee;
+}
+.stoplight_stop {
+    background-color: #c00;
+}
+
+.stoplight_ok {
+    background-color: green;
+}
+
+.value_stop {
+    color: #c00 !important; 
+}
+
+.value_ok {
+    color: green !important;
+}
+
+@media screen and (min-width: 320px) {
+    .widget {
+        width: 100%;
+        border: thin solid #000;
+        min-height: 640px;
+        margin: auto;
+        background: #444;
+        font-size: 1em;
+    }
+}
+
+@media screen and (min-width: 640px) {
+    .widget {
+        width: 100%;
+        border: thin solid #000;
+        min-height: 1024px;
+        margin: auto;
+        background: #444;
+        font-size: 2em;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .widget {
+        width: 250px;
+        border: thin solid #000;
+        min-height: 280px;
+        margin: auto;
+        background: #444;
+        font-size: 1em;
+    }
+}

@@ -1,0 +1,73 @@
+<!DOCTYPE html> 
+<html lang="en-US">
+<head> 
+<title>moe incidence</title> 
+
+<link rel="stylesheet" href="./css/style.css">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script> 
+<script> 
+  $(document).ready(function() { 
+    if (navigator.geolocation) { 
+        navigator.geolocation.getCurrentPosition(showLocation, showError); 
+    } else {
+        $('#location').html('Geolocation is not supported by this browser.'); 
+    } 
+  }); 
+
+  function showError(error) {
+    switch(error.code) {
+        case error.PERMISSION_DENIED:
+            $("#location").html("User denied the request for Geolocation.");
+            break;
+        case error.POSITION_UNAVAILABLE:
+            $("#location").html("Location information is unavailable.");
+            break;
+        case error.TIMEOUT:
+            $("#location").html("The request to get user location timed out.");
+            break;
+        case error.UNKNOWN_ERROR:
+            $("#location").html("An unknown error occurred.");
+            break;
+    }
+    $.ajax({ 
+        type:'GET', 
+        url:'status.php', 
+        success:function(msg){ 
+            if(msg){ 
+                $("#location").html(msg); 
+            } else { 
+                $("#location").html('Not Available'); 
+            }
+        }
+    });
+  }
+
+  function showLocation(position) { 
+
+    var latitude = position.coords.latitude; 
+    var longitude = position.coords.longitude; 
+    
+    $.ajax({ 
+        type:'POST', 
+        url:'status.php', 
+        data:'latitude='+latitude+'&longitude='+longitude, 
+
+        success:function(msg){ 
+            if(msg){ 
+               $("#location").html(msg); 
+            } else { 
+                $("#location").html('Not Available'); 
+            }
+        }
+    }); 
+} 
+</script> 
+
+</head> 
+
+<body> 
+ 
+    <p><span class="label"> </span> <span id="location"></span></p> 
+</body> 
+</html>

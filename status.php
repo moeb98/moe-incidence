@@ -3,14 +3,14 @@ include('./src/CoronaIncidence.php');
 
 ### Configure here ###
 
-# Find your region here and get the OBJECTID: 
+# Find your region here and get the OBJECTID:
 # https://npgeo-corona-npgeo-de.hub.arcgis.com/datasets/917fc37a709542548cc3be077a786c17_0
 $default_id = 26; // Göttingen
 
 ### End of configs ###
 
 $id = $default_id;
-if (!empty($_POST['latitude']) && !empty($_POST['longitude']) ) { 
+if (!empty($_POST['latitude']) && !empty($_POST['longitude']) ) {
 
     $c = curl_init();
     $c_url = 'https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_Landkreisdaten/FeatureServer/0/query?where=1%3D1&outFields=OBJECTID&geometry='
@@ -47,7 +47,6 @@ $today = $incidence->getDaily(0);
 echo "<div class='widget'>";
 
 echo "<h3>Inzidenz für <br /><div class=bold>" . $today['GEN'] . "</div></h3>";
-// echo "<h6>(Fälle pro 100.000 Einwohner in 7 Tagen)</h6>";
 
 drawStoplight($today, $threshold);
 
@@ -56,7 +55,9 @@ echo drawLine($today);
 echo drawLine($incidence->getDaily(1));
 echo drawLine($incidence->getDaily(2));
 echo "</table>";
+
 echo "<h6>Fälle in 7 Tagen pro 100.000 Einwohner, Quelle: <a href='https://www.rki.de/DE/Home/homepage_node.html'>RKI</a></h6>";
+
 echo "</div>";
 
 function drawLine($data) {

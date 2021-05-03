@@ -28,7 +28,7 @@ h3 {
 h6 {
     text-align: center;
     color: #ddd;
-    margin: 2%;
+    margin: 1%;
     font-size: 0.5em;
 }
 
@@ -103,7 +103,7 @@ h6 {
     .widget {
         width: 250px;
         border: thin solid #000;
-        min-height: 280px;
+        min-height: 300px;
         margin: auto;
         background: #444;
         font-size: 1em;

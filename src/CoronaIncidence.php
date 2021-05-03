@@ -28,7 +28,7 @@ class CoronaIncidence
     public function __construct(int $ri)
     {
         $this->region_id = $ri;
-        $this->cache_file = './'.$ri.'.json';
+        $this->cache_file = './db/'.$ri.'.json';
     }
 
     public function getDaily($offset = 0)

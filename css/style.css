@@ -1,13 +1,15 @@
 body,
 html {
     font-family: Arial, Helvetica, sans-serif;
-    background: #eee;
+    background: #444;
+    margin: 0px;
 }
 
 p { 
     border: 1px #444; 
     width: auto;
     padding: 0px;
+    margin: 0px;
     font-size: 18px;
     border-radius: 0px;
     color: #444;
@@ -18,9 +20,18 @@ span.label {
     color: #000;
 } 
 
+h2 {
+    text-align: center;
+    font-weight: normal;
+    font-size: 1.7em;
+    color: #ddd;
+    margin: 4%;
+}
+
 h3 {
     text-align: center;
     font-weight: normal;
+    font-size: 1em;
     color: #ddd;
     margin: 3%;
 }
@@ -30,6 +41,11 @@ h6 {
     color: #ddd;
     margin: 1%;
     font-size: 0.5em;
+    font-weight: normal;
+}
+
+a {
+    color: #007FFF;
 }
 
 #tbl_incidence {
@@ -41,6 +57,7 @@ h6 {
     width: 50%;
     border-bottom: thin solid #888;
     color: #ddd;
+    font-size: 0.9em;
 }
 
 #div_stoplight {
@@ -51,7 +68,7 @@ h6 {
     width: 100%;
     text-align: center;
     vertical-align: middle;
-    font-size: 1.8em;
+    font-size: 1.7em;
     color: #eee;
     display: table;
 }
@@ -80,20 +97,42 @@ h6 {
 @media screen and (min-width: 320px) {
     .widget {
         width: 100%;
-        border: thin solid #000;
-        min-height: 640px;
+        border: thin solid #888;
+        border-bottom: 0px;
         margin: auto;
         background: #444;
         font-size: 1em;
+    }
+    .chart {
+        width: 100%;
+        border: thin solid #888;
+        border-top: 0px;
+        margin: auto;
+        margin-top: 0px;
+        padding-top: 5%;
+        padding-bottom: 5px;
+        background: #444;
+        font-size: 2em;
     }
 }
 
 @media screen and (min-width: 640px) {
     .widget {
         width: 100%;
-        border: thin solid #000;
-        min-height: 1024px;
+        border: thin solid #888;
+        border-bottom: 0px;
         margin: auto;
+        background: #444;
+        font-size: 2em;
+    }
+    .chart {
+        width: 100%;
+        border: thin solid #888;
+        border-top: 0px;
+        margin: auto;
+        margin-top: 0px;
+        padding-top: 5%;
+        padding-bottom: 5px;
         background: #444;
         font-size: 2em;
     }
@@ -101,10 +140,22 @@ h6 {
 
 @media screen and (min-width: 1200px) {
     .widget {
-        width: 250px;
-        border: thin solid #000;
+        width: 300px;
+        border: thin solid #888;
+        border-bottom: 0px;
         min-height: 300px;
         margin: auto;
+        background: #444;
+        font-size: 1em;
+    }
+    .chart {
+        width: 300px;
+        border: thin solid #888;
+        border-top: 0px;
+        margin: auto;
+        margin-top: 0px;
+        padding-top: 5px;
+        padding-bottom: 5px;
         background: #444;
         font-size: 1em;
     }

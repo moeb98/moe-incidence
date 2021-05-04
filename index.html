@@ -1,73 +1,175 @@
 <!DOCTYPE html> 
 <html lang="en-US">
 <head> 
-<title>moe incidence</title> 
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>moe incidence</title> 
 
 <link rel="stylesheet" href="./css/style.css">
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script> 
-<script> 
-  $(document).ready(function() { 
-    if (navigator.geolocation) { 
-        navigator.geolocation.getCurrentPosition(showLocation, showError); 
-    } else {
-        $('#location').html('Geolocation is not supported by this browser.'); 
-    } 
-  }); 
-
-  function showError(error) {
-    switch(error.code) {
-        case error.PERMISSION_DENIED:
-            $("#location").html("User denied the request for Geolocation.");
-            break;
-        case error.POSITION_UNAVAILABLE:
-            $("#location").html("Location information is unavailable.");
-            break;
-        case error.TIMEOUT:
-            $("#location").html("The request to get user location timed out.");
-            break;
-        case error.UNKNOWN_ERROR:
-            $("#location").html("An unknown error occurred.");
-            break;
-    }
-    $.ajax({ 
-        type:'GET', 
-        url:'status.php', 
-        success:function(msg){ 
-            if(msg){ 
-                $("#location").html(msg); 
-            } else { 
-                $("#location").html('Not Available'); 
-            }
-        }
-    });
-  }
-
-  function showLocation(position) { 
-
-    var latitude = position.coords.latitude; 
-    var longitude = position.coords.longitude; 
-    
-    $.ajax({ 
-        type:'POST', 
-        url:'status.php', 
-        data:'latitude='+latitude+'&longitude='+longitude, 
-
-        success:function(msg){ 
-            if(msg){ 
-               $("#location").html(msg); 
-            } else { 
-                $("#location").html('Not Available'); 
-            }
+<script>    
+    $(document).ready(function() { 
+        if (navigator.geolocation) { 
+            navigator.geolocation.getCurrentPosition(showDataForLocation, showError); 
+        } else {
+            $('#location').html('Geolocation is not supported by this browser.'); 
         }
     }); 
-} 
-</script> 
 
+    function showError(error) {
+        switch(error.code) {
+            case error.PERMISSION_DENIED:
+                $("#location").html("User denied the request for Geolocation.");
+                break;
+            case error.POSITION_UNAVAILABLE:
+                $("#location").html("Location information is unavailable.");
+                break;
+            case error.TIMEOUT:
+                $("#location").html("The request to get user location timed out.");
+                break;
+            case error.UNKNOWN_ERROR:
+                $("#location").html("An unknown error occurred.");
+                break;
+        }
+        $.ajax({ 
+            url:'status.php', 
+            type:'GET', 
+        
+            success:function(response){ 
+                if(response){ 
+                    $("#location").html(response); 
+                } else { 
+                    $("#location").html('Not Available'); 
+                }
+            }
+        })
+
+        $.ajax({
+    		url: "chartData.php",
+    		method: "GET",
+
+    		success: function(msg) {
+                drawChart(msg);
+            }
+        })
+    }
+
+    function showDataForLocation(position) { 
+        var latitude = position.coords.latitude; 
+        var longitude = position.coords.longitude; 
+    
+        $.ajax({ 
+            url:'status.php', 
+            type:'POST', 
+            data:'latitude='+latitude+'&longitude='+longitude, 
+
+            success:function(response){ 
+                if(response){ 
+                   $("#location").html(response); 
+                } else { 
+                    $("#location").html('Not Available'); 
+                }
+            }   
+        })
+
+        $.ajax({
+    		url: "chartData.php",
+    		method: "POST",
+            data:'latitude='+latitude+'&longitude='+longitude, 
+
+    		success: function(msg) {
+                drawChart(msg);
+            }
+        })
+    }
+
+    function drawChart(msg) {
+        console.log(msg);
+		var dateValues = [];
+		var incidenceValues = [];
+
+		for (var i = msg.length - 1; i >= 0; i--) {
+            var date = new Date(msg[i].ts * 1000);
+            var day = date.getDate();
+            var month = date.getMonth() + 1;
+            var dateString = (day <= 9 ? '0' + day : day) + '.' + (month <= 9 ? '0' + month : month) + '.';
+            dateValues.push(dateString);
+    		incidenceValues.push(msg[i].cases7_per_100k);
+	    }
+
+		var chartdata = {
+			labels: dateValues,
+			datasets: [
+				{
+					// label: 'Datum',
+					backgroundColor: 'rgba(68, 68, 68, 1)',
+					borderColor: 'rgba(0, 127, 255, 1)',
+                    color: 'rgba(221,221,221,2)',
+                    hoverBackgroundColor: 'rgba(0, 127, 255, 1)',
+					hoverBorderColor: 'rgba(0, 127, 255, 1)',
+					data: incidenceValues
+				}
+			]};
+
+		var ctx = $("#myChart");
+        var chartCanvas = document.getElementById('chartContainer');
+        
+        if (chartCanvas.getBoundingClientRect().width <= 320) {
+            Chart.defaults.font.size = 12;
+        } else if (chartCanvas.getBoundingClientRect().width <= 640) {
+            Chart.defaults.font.size = 16;
+        } else {
+            Chart.defaults.font.size = 24;
+        }
+        var lineGraph = new Chart(ctx, {
+			type: 'line',
+			data: chartdata,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+      	            y: {
+           	            beginAtZero: true,
+           	            min: 0,
+                        suggestedMax: 150,
+                        grid: {
+                            color: '#666'
+                        },
+                        ticks: {
+                            color: '#ddd'
+                        }
+       	            },
+                    x: {
+                        grid: {
+                            color: '#666'
+                        },
+                        ticks: {
+                            color: '#ddd'
+                        }
+       	            }
+   	            },
+                layout: {
+                    padding: 10
+                }
+            }
+		})
+  }
+</script> 
 </head> 
 
 <body> 
- 
-    <p><span class="label"> </span> <span id="location"></span></p> 
-</body> 
+    <p>
+        <span class="label"></span><span id="location">
+            <div class="chart" id="chartContainer">
+                <canvas id="myChart"></canvas>
+                <h6>Fälle in 7 Tagen pro 100.000 Einwohner, Quelle: <a href='https://www.rki.de/DE/Home/homepage_node.html'>RKI</a></h6>
+            </div>
+        </span> 
+    </p>
+</body>
 </html>

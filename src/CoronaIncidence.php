@@ -48,11 +48,10 @@ class CoronaIncidence
         }
     }
 
-    private function getCache(string $dt)
-    {
+    private function getCache(string $dt) {
         $f = @file_get_contents($this->cache_file);
 
-        if ($f == false) {
+        if ($f === false) {
             return;
         }
 
@@ -64,8 +63,7 @@ class CoronaIncidence
         }
     }
 
-    private function fetchData(string $dt)
-    {
+    private function fetchData(string $dt) {
         $fieldstr = implode(",", $this->fields);
 
         $c = curl_init();
@@ -101,18 +99,36 @@ class CoronaIncidence
         }
     }
 
-    private function setCache($data)
-    {
+    private function setCache($data) {
+        $startFromScratch = false;
         $f = @file_get_contents($this->cache_file);
-        if ($f == false) {
-            $old = [];
+        if ($f === false) {
+            $f = @file_get_contents($this->cache_file.".bak");
+            if ($f === false) {
+                $startFromScratch = true;
+                $old = [];
+            } else {
+                $old = json_decode($f, true);
+            }
         } else {
             $old = json_decode($f, true);
         }
         $date = DateTime::createFromFormat("d.m.Y, H:i", str_replace(" Uhr", "", $data['last_update']));
         $key = $date->format("Ymd");
         $old[$key] = $data;
+
+        $parts = explode('/', $this->cache_file);
+        array_pop($parts);
+        $dir = implode('/', $parts);
+
+        if(!is_dir($dir)) {
+            mkdir($dir, 0777, true);
+        }
         file_put_contents($this->cache_file, json_encode($old));
+        if (!$startFromScratch) {
+            file_put_contents($this->cache_file.".bak", json_encode($old));
+        }
         return $key;
     }
 }
+

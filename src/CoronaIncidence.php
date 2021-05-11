@@ -101,17 +101,18 @@ class CoronaIncidence
 
     private function setCache($data) {
         $startFromScratch = false;
+        
         $f = @file_get_contents($this->cache_file);
-        if ($f === false) {
-            $f = @file_get_contents($this->cache_file.".bak");
-            if ($f === false) {
-                $startFromScratch = true;
-                $old = [];
-            } else {
-                $old = json_decode($f, true);
-            }
-        } else {
+        if ($f !== false) {
             $old = json_decode($f, true);
+        } else {
+            $f = @file_get_contents($this->cache_file.".bak");
+            if ($f !== false) {
+                $old = json_decode($f, true);
+            } else {
+                $startFromScratch = true;
+                $old = [];            
+            }
         }
         $date = DateTime::createFromFormat("d.m.Y, H:i", str_replace(" Uhr", "", $data['last_update']));
         $key = $date->format("Ymd");

@@ -101,19 +101,38 @@ class CoronaIncidence
 
     private function setCache($data) {
         $startFromScratch = false;
-        
-        $f = @file_get_contents($this->cache_file);
-        if ($f !== false) {
-            $old = json_decode($f, true);
-        } else {
-            $f = @file_get_contents($this->cache_file.".bak");
+        $readSuccess = false;
+
+        if (is_readable($this->cache_file) ) {
+            $myFile = fopen($this->cache_file, "r");
+            flock($myFile, LOCK_SH);
+            $f = @file_get_contents($this->cache_file);
+            flock($myFile, LOCK_UN);
+            fclose($myFile);
             if ($f !== false) {
                 $old = json_decode($f, true);
-            } else {
-                $startFromScratch = true;
-                $old = [];            
+                $readSuccess = true;
             }
         }
+
+        if (!$readSuccess) {
+            if (is_readable($this->cache_file.".bak") ) {
+                $myFile = fopen($this->cache_file.".bak", "r");
+                flock($myFile, LOCK_SH);
+                $f = @file_get_contents($this->cache_file.".bak");
+                flock($myFile, LOCK_UN);
+                fclose($myFile);
+                if ($f !== false) {
+                    $old = json_decode($f, true);
+                } else {
+                    throw new Exception ("Error reading backup file: ".$this->cache_file.".bak");
+                }
+            } else {
+                $startFromScratch = true;
+                $old = [];
+            }
+        }
+
         $date = DateTime::createFromFormat("d.m.Y, H:i", str_replace(" Uhr", "", $data['last_update']));
         $key = $date->format("Ymd");
         $old[$key] = $data;
@@ -125,11 +144,15 @@ class CoronaIncidence
         if(!is_dir($dir)) {
             mkdir($dir, 0777, true);
         }
-        file_put_contents($this->cache_file, json_encode($old));
+
+         file_put_contents($this->cache_file, json_encode($old),LOCK_EX);
         if (!$startFromScratch) {
-            file_put_contents($this->cache_file.".bak", json_encode($old));
+            file_put_contents($this->cache_file.".bak", json_encode($old),LOCK_EX);
         }
+
         return $key;
     }
+
+
 }
 

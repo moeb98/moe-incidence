@@ -18,18 +18,17 @@ curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
 $result = curl_exec($c);
 if (!curl_errno($c)) {
     $json = json_decode($result, true);
-    if (!isset($json['objectIds'])) {
-        return;
+    if (isset($json['objectIds'])) {
+        $ids = $json['objectIds'];
+        foreach ($ids as $id) {
+            $incidence = new CoronaIncidence($id);
+        
+            $today = $incidence->getDaily(0);
+            echo $today['ts']." ".$today['OBJECTID']."<br />";  
+        }        
     }
-    $ids = $json['objectIds'];
 }
 curl_close($c);
 
-foreach ($ids as $id) {
-    $incidence = new CoronaIncidence($id);
-
-    $today = $incidence->getDaily(0);
-    echo $today['ts']." ".$today['OBJECTID']."<br />";  
-}
 
 ?>

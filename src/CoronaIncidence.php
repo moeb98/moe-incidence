@@ -137,7 +137,14 @@ class CoronaIncidence
             }
         }
 
-        $date = DateTime::createFromFormat("d.m.Y, H:i", str_replace(" Uhr", "", $data['last_update']));
+        if ( strlen($data['last_update']) > 0 ) {
+            $date = DateTime::createFromFormat("d.m.Y, H:i", str_replace(" Uhr", "", $data['last_update']));
+        } else {
+            $date = date("d.m.Y, H:i");
+        }
+
+
+//        $date = DateTime::createFromFormat("d.m.Y, H:i", str_replace(" Uhr", "", $data['last_update']));
         $key = $date->format("Ymd");
         $old[$key] = $data;
 

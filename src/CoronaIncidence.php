@@ -92,7 +92,7 @@ class CoronaIncidence
         if ( strlen($data['last_update']) > 0 ) {
             $date = DateTime::createFromFormat("d.m.Y, H:i", str_replace(" Uhr", "", $data['last_update']));
         } else {
-            $date = new DateTime('NOW');
+            $date = date("d.m.Y, H:i");
         }
         $data['ts'] = $date->format("U");
         $set = $this->setCache($data);
